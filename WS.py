@@ -82,7 +82,7 @@ content = BeautifulSoup(req.text, 'html.parser')
 articles = []
 
 for item in content.find_all('tr', class_='athing'):
-    item_a = item.find('a')
+    item_a = item.find('a', href=re.compile('https'))
     item_link = item_a.get('href') if item.a else None
     item_text = item_a.get_text(strip=True) if item_a else None
     next_row = item.find_next_sibling('tr')
