@@ -102,3 +102,22 @@ for article in articles:
     print(article)
 
 # ------------------------------------------------------
+"""
+L5
+"""
+
+url = 'https://github.com/{}'
+username = 'erfansafarzad7'
+
+req = requests.get(url.format(username), params={'tab': 'repositories'})
+content = BeautifulSoup(req.text, 'html.parser')
+repos_elements = content.find(id='user-repositories-list')
+repos = repos_elements.find_all('li')
+
+for repo in repos:
+    name = repo.find('h3').find('a').get_text(strip=True)
+    language = repo.find(attrs={'itemprop': 'programmingLanguage'})
+    language = language.get_text(strip=True) if language else 'unknown'
+    stars = repo.find('a', attrs={'href': re.compile('\/stargazers')})
+    stars = int(stars.get_text(strip=True).replace(',', '') if stars else 0)
+    print(name, language, stars)
