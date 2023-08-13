@@ -11,10 +11,17 @@ class BikeSpider(scrapy.Spider):
         for bike in response.css('div.product--box'):
             name = remove_tags(bike.css('a.product--title').get()).strip()
             price = remove_tags(bike.css('.product--price').get()).strip()
+            link = bike.css('a.product--title::attr(href)').get()
 
-            yield {'name': name, 'price': price}
+            yield scrapy.Request(link, callback=self.parse_bike)
 
-        next_page = response.css('a[title="Next page"]::attr(href)').get()
+            # yield {'name': name, 'price': price}
 
-        if next_page:
-            yield response.follow(next_page, callback=self.parse)
+        # next_page = response.css('a[title="Next page"]::attr(href)').get()
+        #
+        # if next_page:
+        #     yield response.follow(next_page, callback=self.parse)
+
+    def parse_bike(self, response):
+        p_id = response.css('span.entry--content::text').get()
+        yield {'p_id': p_id}
