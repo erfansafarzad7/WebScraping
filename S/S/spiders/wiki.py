@@ -1,11 +1,17 @@
 import scrapy
+from scrapy.loader import ItemLoader
+from .. import items
 
 
 class WikiSpider(scrapy.Spider):
     name = 'wiki'
-    start_urls = ['https://fa.wikipedia.org/wiki/%D8%A8%D8%B1%D9%88%D8%B3_%D9%84%DB%8C',
-                 'https://en.wikipedia.org/wiki/Genghis_Khan']
+    start_urls = ['https://www.scrapethissite.com/pages/simple/', ]
 
     def parse(self, response, **kwargs):
-        title = response.css('title').extract()
-        yield {'title': title}
+        for country in response.css('div.country'):
+            l = ItemLoader(item=items.SItem(), selector=country)
+            l.add_css('name', 'h3.country-name')
+            l.add_css('capital', 'span.country-capital::text')
+            l.add_css('population', 'span.country-population::text')
+
+            yield l.load_item()
