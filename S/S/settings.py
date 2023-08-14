@@ -14,7 +14,7 @@ NEWSPIDER_MODULE = "S.spiders"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = "S (+http://www.yourdomain.com)"
+USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; Touch; rv:11.0) like Gecko"
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -50,9 +50,10 @@ ROBOTSTXT_OBEY = True
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    "S.middlewares.SDownloaderMiddleware": 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+   "S.middlewares.RotateUserAgentMiddleware": 543,
+
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
