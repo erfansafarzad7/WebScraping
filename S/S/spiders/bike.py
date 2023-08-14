@@ -1,11 +1,13 @@
 import scrapy
 from w3lib.html import remove_tags
+from scrapy.linkextractors import LinkExtractor
 
 
 # run => scrapy crawl bike -o bike.jl
 class BikeSpider(scrapy.Spider):
     name = 'bike'
     start_urls = ['https://www.bike-discount.de/en/bike', ]
+    le = LinkExtractor()
 
     def parse(self, response, **kwargs):
         for bike in response.css('div.product--box'):
@@ -13,7 +15,11 @@ class BikeSpider(scrapy.Spider):
             price = remove_tags(bike.css('.product--price').get()).strip()
             link = bike.css('a.product--title::attr(href)').get()
 
-            yield scrapy.Request(link, callback=self.parse_bike)
+        links = self.le.extract_links(response)
+        for i in links:
+            yield {'link': i}
+
+            # yield scrapy.Request(link, callback=self.parse_bike)
 
             # yield {'name': name, 'price': price}
 
